@@ -1,0 +1,11 @@
+{
+    "server": {
+        "info": {
+            "port": 3001,
+            "routes": {
+                "cors": true
+            },
+            "host": "localhost"
+        }
+    }
+}

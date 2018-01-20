@@ -12,7 +12,10 @@ module.exports = [
                 'hapi-swagger':{
                     responses:{
                         '400':{
-                            description: 'BadRequest,'
+                            description: 'BadRequest',
+                            schema: Joi.object({
+                                        equals: Joi.number(),
+                                    }).label('Result')
                         }
                     },
                     payloadType: 'json,',
@@ -24,6 +27,11 @@ module.exports = [
             tags: ['api'], // ADD THIS TAG,
             validate: {
                 params: {
+                    id : Joi.number()
+                            .required()
+                            .description('the id for the todo item'),
+                },
+                query: {
                     id : Joi.number()
                             .required()
                             .description('the id for the todo item'),

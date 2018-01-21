@@ -72,23 +72,28 @@ module.exports = {
     }
   },
   addChild: async function (categoryId, childCategoryName) {
-    console.log('addChild');
-    let category = await models.tables.category.findOne({
-      where: {
-        id: categoryId
-      },
-      include: [
-        {
-          model: models.tables.childCategory,
-          where: {
-            name: childCategoryName
+    let category
+    try {
+      category = await models.tables.category.findOne({
+        where: {
+          id: categoryId
+        },
+        include: [
+          {
+            model: models.tables.childCategory,
+            where: {
+              name: childCategoryName
+            },
+            as: 'TChildCategory'
           }
-        }
-      ]
-    });
-    console.log('category');
-    console.log(category);
+        ]
+      });
+    } catch (error) {
+      console.log(error)
+    }
     if (category && category.length > 0) {
+      return resCode.dataFindFailure(' has thiw categoryName' + childCategoryName);
+    } else {
       await models.sequelize.transaction();
       let re = await models.tables.childCategory.create({
         categoryId: categoryId,
@@ -99,8 +104,6 @@ module.exports = {
       } else {
         return resCode.dataCreateFailure();
       }
-    } else {
-      return resCode.dataFindFailure('dont has categoryId');
     }
   },
   removeChild: async function (childCategoryId) {
@@ -119,7 +122,7 @@ module.exports = {
   childRecomList: async function (categoryId) {
     const result = await models.tables.childCategory.findAll({
       where: {
-        categoryId: categoryId
+        id: categoryId
       }
     });
     if (result && result.length > 0) {

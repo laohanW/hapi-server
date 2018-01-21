@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = {
+    priority: 4,
     model:{
         table:{
             name: {
@@ -8,7 +9,10 @@ module.exports = {
         },
         options:{
             tableName: 'TChildCategory',
-            timestamp: false
+            timestamp: false,
+            associate: function(models){
+                console.log('wwwwwww');
+            }
             // freezeTableName: true
         }
     },
@@ -16,7 +20,8 @@ module.exports = {
         type: 'hasMany',
         to:'liveStream',
         options:{
-            
+            as : 'TLiveStream',
+            foreignKey: 'categoryId'
         }
     }
 }

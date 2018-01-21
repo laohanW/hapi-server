@@ -1,5 +1,7 @@
+'use strict';
 const Sequelize = require('sequelize');
 module.exports = {
+    priority: 5,
     model: {
         table: {
             type: {
@@ -29,6 +31,10 @@ module.exports = {
     },
     associate:{
         type: 'hasMany',
-        to:'childCategory'
+        to:'childCategory',
+        options: {
+            as: 'TChildCategory',
+            foreignKey: 'childCategoryId'
+        }
     }
 }

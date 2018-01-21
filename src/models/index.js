@@ -1,3 +1,4 @@
+'use strict';
 const Glob = require('glob');
 const Path = require('path');
 const Sequelize = require('sequelize');
@@ -7,7 +8,7 @@ const namespace = LocalStorage.createNamespace('my-ver-own-namespace');
 
 const pattern = './*.model.js';
 let internals={};
-let models={};
+let tables={};
 const globtions={
     nodir: true,
     strict: true,
@@ -20,7 +21,7 @@ matches.forEach(match => {
     const conHandlerName=Path.basename(match, Path.extname(match));
     const handlerName=Path.basename(conHandlerName, Path.extname(conHandlerName));
     const cls=load.default || load;
-    models[handlerName]=cls;
+    tables[handlerName]=cls;
 });
 Sequelize.useCLS(namespace);
 const sequelize = new Sequelize(
@@ -30,26 +31,61 @@ const sequelize = new Sequelize(
     JSON.parse(JSON.stringify(Config.get('db'))
 ));
 internals.sequelize = sequelize;
-internals.models={};
-async function initialize() {
-    for(let m in models){
-        let seq = sequelize.define(m,models[m].table);
-        await seq.sync();
-        internals.models[m]=seq;
+internals.tables={};
+let sortTables = [];
+function getLength(){
+    let i =0;
+    for(let m in tables){
+        i++;
     }
-    for(let m in models){
-        if(models[m].associate){
-            if(models[m].associate.type === 'belongsToMany'){
-                internals.models[m].belongsToMany(internals.models[models[m].associate.to],models[m].associate.options);
+    return i;
+}
+function sort(){
+    let len = getLength();
+    for(let i = 0; i< len; i++){
+        let min = 9999;
+        for(let m in tables) {
+            let has = false;
+            for(let n in sortTables){
+                if( tables[m].priority === sortTables[n]){
+                    has = true;
+                }
             }
-            else if(models[m].associate.type === 'belongsTo'){
-                internals.models[m].belongsTo(internals.models[models[m].associate.to],models[m].associate.options);
+            if(!has && tables[m].priority < min){
+                min = tables[m].priority;
             }
-            else if(models[m].associate.type === 'hasMany'){
-                internals.models[m].hasMany(internals.models[models[m].associate.to],models[m].associate.options);
-            }
-            else if(models[m].associate.type === 'hasOne'){
-                internals.models[m].hasOne(internals.models[models[m].associate.to],models[m].associate.options);
+        }
+        sortTables.push(min);
+    }
+    console.log(sortTables);
+}
+async function initialize() {
+    sort();
+    for(let i = 0; i<sortTables.length; i++){
+        let p = sortTables[i];
+        for(let m in tables){
+            // console.log(m);
+            // console.log(tables[m]);
+            if(tables[m].priority === p ){
+                let seq = sequelize.define(m,tables[m].model.table,tables[m].model.options);
+                internals.tables[m]=seq;
+                if(tables[m].associate){
+                    if(tables[m].associate.type === 'belongsToMany'){
+                        internals.tables[m].belongsToMany(internals.tables[tables[m].associate.to],tables[m].associate.options);
+                    }
+                    else if(tables[m].associate.type === 'belongsTo'){
+                        internals.tables[m].belongsTo(internals.tables[tables[m].associate.to],tables[m].associate.options);
+                    }
+                    else if(tables[m].associate.type === 'hasMany'){
+                        console.log(internals.tables[tables[m].associate.to].findOne);
+                        internals.tables[m].hasMany(internals.tables[tables[m].associate.to],tables[m].associate.options);
+                    }
+                    else if(tables[m].associate.type === 'hasOne'){
+                        internals.tables[m].hasOne(internals.tables[tables[m].associate.to],tables[m].associate.options);
+                    }
+                }
+                await seq.sync();
+                console.log(seq)
             }
         }
     }

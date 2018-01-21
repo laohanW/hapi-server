@@ -14,10 +14,10 @@ exports.plugin = {
             return isArray(value) ? value : [value];
         };
         var globOptions = {
-        nodir: true,
-        strict: true,
-        cwd: options.cwd || process.cwd(),
-        ignore: options.ignore
+            nodir: true,
+            strict: true,
+            cwd: options.cwd || process.cwd(),
+            ignore: options.ignore
         }
         cast(options.includes).forEach(pattern =>{
             var files = glob.sync(pattern, globOptions)
@@ -35,5 +35,5 @@ exports.plugin = {
             });
         })
     },
-    pkg: require('../package.json')
+    name:'route-plugins'
 }

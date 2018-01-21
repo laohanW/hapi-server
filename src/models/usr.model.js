@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = {
+    priority: 2,
     model: {
         table: {
             id: {

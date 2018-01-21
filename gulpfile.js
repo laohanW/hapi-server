@@ -47,7 +47,7 @@ gulp.task('ESlint_nodemon', ['ESlint'], function () {
       return []
     },
     verbose: true,
-    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js'],
+    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js','test/**','newrelic_agent.log'],
     env: {
       NODE_ENV: 'development'
     },

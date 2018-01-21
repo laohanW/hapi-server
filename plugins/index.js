@@ -1,8 +1,4 @@
 'use strict';
-const Good = require('good');
-const Inert = require('inert');
-const Vision = require('vision');
-const HapiSwagger = require('hapi-swagger');
 const Config = require('config');
 const pkg = require('../package');
 const routePlugin = require('./routes.plugin')
@@ -10,10 +6,10 @@ module.exports=async (server)=>{
     let plugins = [];
     if(Config.get('env') === 'development'){
         plugins=[
-           Inert,
-           Vision,
+            require('inert'),
+            require('vision'),
            {
-               plugin: HapiSwagger,
+               plugin:  require('hapi-swagger'),
                options:{
                    info:{
                        title: 'Liveplayer API Documentation',
@@ -24,8 +20,59 @@ module.exports=async (server)=>{
                        }
                    },
                    schemes: ['http','https'],
-                   host: 'www.baidu.com',
-                   cors: true
+                   host: Config.get('server.info.host')+':'+Config.get('server.info.port'),
+                   cors: Config.get('server.info.routes.cors')
+               }
+           },
+           {
+               plugin:require('./good'),
+               options:{
+                    // ops: {
+                    //     interval: 1000
+                    // },
+                    reporters: {
+                        myConsoleReporter: [
+                            {
+                                module: 'good-squeeze',
+                                name: 'Squeeze',
+                                args: [{ log: '*', response: '*' }]
+                            }, 
+                            {
+                                module: 'good-console'
+                            },
+                             'stdout'
+                        ],
+                        myFileReporter: [
+                            {
+                                module: 'good-squeeze',
+                                name: 'Squeeze',
+                                args: [{ ops: '*' }]
+                            }, 
+                            {
+                                module: 'good-squeeze',
+                                name: 'SafeJson'
+                            }, 
+                            // {
+                            //     module: 'good-file',
+                            //     args: ['./test/fixtures/awesome_log']
+                            // }
+                        ],
+                        myHTTPReporter: [
+                            {
+                                module: 'good-squeeze',
+                                name: 'Squeeze',
+                                args: [{ error: '*' }]
+                            }, 
+                            {
+                                module: 'good-http',
+                                args: ['http://prod.logs:3000', {
+                                    wreck: {
+                                        headers: { 'x-api-key': 12345 }
+                                    }
+                                }]
+                            }
+                        ]
+                    }
                }
            }
         ]

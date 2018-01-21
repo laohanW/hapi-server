@@ -9,8 +9,6 @@ if (process.env.npm_config_argv !== undefined && process.env.npm_config_argv.ind
 }
 
 function lintOne (aims) {
-  console.log('ESlint:' + aims)
-  console.time('Finished eslint')
   return gulp.src(aims)
     .pipe(eslint({configFile: './.eslintrc.js'}))
     .pipe(eslint.format(friendlyFormatter))
@@ -47,7 +45,7 @@ gulp.task('ESlint_nodemon', ['ESlint'], function () {
       return []
     },
     verbose: true,
-    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js','test/**','newrelic_agent.log'],
+    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js', 'test/**', 'newrelic_agent.log'],
     env: {
       NODE_ENV: 'development'
     },

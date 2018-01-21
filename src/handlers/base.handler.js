@@ -1,4 +1,4 @@
 
-module.exports = function(request,h){
-    return 'base test';
+module.exports = function (request, h) {
+  return 'base test';
 };

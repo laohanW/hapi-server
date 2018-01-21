@@ -1,40 +1,40 @@
 'use strict';
 const Sequelize = require('sequelize');
 module.exports = {
-    priority: 5,
-    model: {
-        table: {
-            type: {
-                type: Sequelize.INTEGER
-            },
-            name: {
-                type: Sequelize.STRING
-            },
-            recommended: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
-                validate: {
-                    min: 0,
-                    max: 1
-                }
-            },
-            description: {
-                type: Sequelize.STRING
-            }
-        },
-        options: {
-            tableName: 'TCategory',
-            timestamp: false
-            // freezeTableName: true
+  priority: 5,
+  model: {
+    table: {
+      type: {
+        type: Sequelize.INTEGER
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      recommended: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          min: 0,
+          max: 1
         }
+      },
+      description: {
+        type: Sequelize.STRING
+      }
     },
-    associate:{
-        type: 'hasMany',
-        to:'childCategory',
-        options: {
-            as: 'TChildCategory',
-            foreignKey: 'childCategoryId'
-        }
+    options: {
+      tableName: 'TCategory',
+      timestamp: false
+      // freezeTableName: true
     }
+  },
+  associate: {
+    type: 'hasMany',
+    to: 'childCategory',
+    options: {
+      as: 'TChildCategory',
+      foreignKey: 'childCategoryId'
+    }
+  }
 }

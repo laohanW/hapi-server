@@ -6,7 +6,7 @@ if (Config.get('profile')) {
 }
 const plugins = require('./plugins');
 async function start () {
-  const connectionConfig = Config.get('server.info');
+  const connectionConfig = Config.get('server');
   const server = new Hapi.Server(JSON.parse(JSON.stringify(connectionConfig)));
   await plugins(server);
   server.start();

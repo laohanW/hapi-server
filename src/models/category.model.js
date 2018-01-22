@@ -24,7 +24,6 @@ module.exports = {
       }
     },
     options: {
-      tableName: 'TCategory',
       timestamp: false
       // freezeTableName: true
     }
@@ -33,7 +32,6 @@ module.exports = {
     type: 'hasMany',
     to: 'childCategory',
     options: {
-      as: 'TChildCategory',
       foreignKey: 'childCategoryId'
     }
   }

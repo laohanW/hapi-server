@@ -62,16 +62,19 @@
 //   [1002, 'destroy failure'],
 //   [1003, 'find failure']
 // ]
-function setCode (code, error, msg) {
+function setCode (code, error, res) {
   return {
-    statusCode: code,
-    error: error,
-    message: msg
+    resCode: code,
+    msg: error,
+    response: res
   }
 }
 module.exports = {
   success: function (res) {
     return setCode(200, '', res || '');
+  },
+  isSuccess: function (obj) {
+    return obj.resCode === 200;
   },
   notFound: function (message) {
     return setCode(404, 'Not Found', message || '');

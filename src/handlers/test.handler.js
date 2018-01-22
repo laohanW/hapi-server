@@ -1,3 +1,4 @@
+'use strict';
 const services = require('../services')
 module.exports = {
   demo0: function (request, h) {

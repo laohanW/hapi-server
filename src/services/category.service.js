@@ -83,8 +83,7 @@ module.exports = {
             model: models.tables.childCategory,
             where: {
               name: childCategoryName
-            },
-            as: 'TChildCategory'
+            }
           }
         ]
       });

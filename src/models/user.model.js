@@ -12,6 +12,9 @@ module.exports = {
       account: {
         type: Sequelize.STRING
       },
+      userId: {
+        type: Sequelize.INTEGER
+      },
       password: {
         type: Sequelize.STRING
       },
@@ -20,7 +23,6 @@ module.exports = {
       }
     },
     options: {
-      tableName: 'TUser',
       timestamp: false
       // freezeTableName: true
     }

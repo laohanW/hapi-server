@@ -8,7 +8,6 @@ module.exports = {
       }
     },
     options: {
-      tableName: 'TLiveStream',
       timestamp: false
     }
   }

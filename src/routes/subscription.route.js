@@ -3,7 +3,7 @@ const Joi = require('joi');
 module.exports = [
   {
     method: 'POST',
-    path: '/test/get',
+    path: '/subscription/add',
     config: {
       handler: (req, h) => {
         return 'test success';
@@ -18,8 +18,7 @@ module.exports = [
               }).label('Result')
             }
           },
-          payloadType: 'json',
-          deprecated: true
+          payloadType: 'json'
         }
       },
       description: 'Get',
@@ -27,7 +26,7 @@ module.exports = [
       tags: ['api'], // ADD THIS TAG,
       validate: {
         payload: {
-          id: Joi.number()
+          account: Joi.number()
             .required()
             .description('the id for the todo item')
         }

@@ -1,17 +1,13 @@
-
 const Sequelize = require('sequelize');
 module.exports = {
-  priority: 1,
+  priority: 6,
   model: {
     table: {
-      id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        unique: true
+      followedId: {
+        type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      subscriberId: {
+        type: Sequelize.INTEGER
       }
     },
     options: {

@@ -8,11 +8,7 @@ module.exports = {
       }
     },
     options: {
-      tableName: 'TChildCategory',
-      timestamp: false,
-      associate: function (models) {
-        console.log('wwwwwww');
-      }
+      timestamp: false
       // freezeTableName: true
     }
   },
@@ -20,7 +16,6 @@ module.exports = {
     type: 'hasMany',
     to: 'liveStream',
     options: {
-      as: 'TLiveStream',
       foreignKey: 'categoryId'
     }
   }

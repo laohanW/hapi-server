@@ -20,8 +20,8 @@ module.exports = async (server) => {
             }
           },
           schemes: ['http', 'https'],
-          host: Config.get('server.info.host') + ':' + Config.get('server.info.port'),
-          cors: Config.get('server.info.routes.cors')
+          host: Config.get('server.host') + ':' + Config.get('server.port'),
+          cors: Config.get('server.routes.cors')
         }
       },
       {

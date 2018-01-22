@@ -1,3 +1,4 @@
+'use strict';
 // const models = require('../models');
 module.exports = {
   demo1: function () {

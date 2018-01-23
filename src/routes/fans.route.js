@@ -4,9 +4,9 @@ const handlers = require('../handlers');
 module.exports = [
   {
     method: 'POST',
-    path: '/subscription/add',
+    path: '/fans/tofan',
     config: {
-      handler: handlers.subscription.add,
+      handler: handlers.fans.toFan,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -20,22 +20,22 @@ module.exports = [
           payloadType: 'json'
         }
       },
-      description: 'Get',
-      notes: 'Returns a todo item by the id passed in the path',
+      description: 'userId成为targetId的粉丝',
+      notes: 'userId成为targetId的粉丝',
       tags: ['api'], // ADD THIS TAG,
       validate: {
         payload: {
-          userId: Joi.number().required().description('the id for the todo item'),
-          targetId: Joi.number().required().description('subscrit to target')
+          userId: Joi.number().required().description('userid申请变成粉丝 '),
+          targetId: Joi.number().required().description('成为target的粉丝')
         }
       }
     }
   },
   {
     method: 'POST',
-    path: '/subscription/remove',
+    path: '/fans/cancelfan',
     config: {
-      handler: handlers.subscription.remove,
+      handler: handlers.fans.cancelFan,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -49,22 +49,22 @@ module.exports = [
           payloadType: 'json'
         }
       },
-      description: 'Get',
-      notes: 'Returns a todo item by the id passed in the path',
+      description: 'userId取消成为targetId的粉丝',
+      notes: 'userId取消成为targetId的粉丝',
       tags: ['api'], // ADD THIS TAG,
       validate: {
         payload: {
-          userId: Joi.number().required().description('the id for the todo item'),
-          targetId: Joi.number().required().description('subscrit to target')
+          userId: Joi.number().required().description('userid申请取消粉丝 '),
+          targetId: Joi.number().required().description('取消成为target的粉丝')
         }
       }
     }
   },
   {
     method: 'POST',
-    path: '/subscription/list',
+    path: '/fans/list',
     config: {
-      handler: handlers.subscription.list,
+      handler: handlers.fans.list,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -78,14 +78,12 @@ module.exports = [
           payloadType: 'json'
         }
       },
-      description: 'Get',
-      notes: 'Returns a todo item by the id passed in the path',
+      description: '被关注者的粉丝列表',
+      notes: '粉丝列表',
       tags: ['api'], // ADD THIS TAG,
       validate: {
         payload: {
-          userId: Joi.number()
-            .required()
-            .description('the id for the todo item')
+          userId: Joi.number().required().description('被关注者的userid ')
         }
       }
     }

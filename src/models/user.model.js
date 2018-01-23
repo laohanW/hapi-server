@@ -20,6 +20,36 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING
+      },
+      sex: {
+        type: Sequelize.INTEGER
+      },
+      age: {
+        type: Sequelize.INTEGER
+      },
+      phone: {
+        type: Sequelize.INTEGER
+      },
+      country: {
+        type: Sequelize.INTEGER
+      },
+      autgoraph: {
+        type: Sequelize.STRING// 签名
+      },
+      level: {
+        type: Sequelize.INTEGER
+      },
+      imazamox: {
+        type: Sequelize.INTEGER// 金豆
+      },
+      silverBeans: {
+        type: Sequelize.INTEGER// 银豆
+      },
+      imazamoxCoupon: {
+        type: Sequelize.INTEGER// 金豆卷
+      },
+      yCurrency: {
+        tyoe: Sequelize.INTEGER// Y币
       }
     },
     options: {

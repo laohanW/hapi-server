@@ -27,9 +27,7 @@ module.exports = [
       tags: ['api'], // ADD THIS TAG,
       validate: {
         payload: {
-          id: Joi.number()
-            .required()
-            .description('the id for the todo item')
+          id: Joi.number().required().description('the id for the todo item')
         }
       }
     }

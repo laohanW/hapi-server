@@ -38,26 +38,17 @@ module.exports = {
     }
   },
   cancel: async function (streamId, account) {
-    let user = await models.tables.user.findOne({
+    await models.sequelize.transaction();
+    let result = await models.tables.liveStream.destroy({
       where: {
+        id: streamId,
         account: account
       }
     });
-    if (user) {
-      await models.sequelize.transaction();
-      let result = await models.tables.liveStream.destroy({
-        where: {
-          id: streamId,
-          account: account
-        }
-      });
-      if (result > 0) {
-        return resCode.success();
-      } else {
-        return resCode.dataDestroyFailure();
-      }
+    if (result > 0) {
+      return resCode.success();
     } else {
-      return resCode.dataFindFailure();
+      return resCode.dataDestroyFailure();
     }
   },
   list: async function (childCategoryId) {

@@ -89,5 +89,63 @@ module.exports = [
         }
       }
     }
+  },
+  {
+    method: 'POST',
+    path: '/user/info',
+    config: {
+      handler: handlers.user.info,
+      plugins: {
+        'hapi-swagger': {
+          responses: {
+            '400': {
+              description: 'BadRequest',
+              schema: Joi.object({
+                equals: Joi.number()
+              }).label('Result')
+            }
+          },
+          payloadType: 'json'
+        }
+      },
+      description: 'Get',
+      notes: 'Returns a todo item by the id passed in the path',
+      tags: ['api'], // ADD THIS TAG,
+      validate: {
+        payload: {
+          account: Joi.string().required().description('the id for the todo item'),
+          oldPassword: Joi.string().required().description('old password'),
+          newPassword: Joi.string().required().description('new password')
+        }
+      }
+    }
+  },
+  {
+    method: 'POST',
+    path: '/user/infoInLiveStream',
+    config: {
+      handler: handlers.user.infoInLiveStream,
+      plugins: {
+        'hapi-swagger': {
+          responses: {
+            '400': {
+              description: 'BadRequest',
+              schema: Joi.object({
+                equals: Joi.number()
+              }).label('Result')
+            }
+          },
+          payloadType: 'json'
+        }
+      },
+      description: 'Get',
+      notes: 'Returns a todo item by the id passed in the path',
+      tags: ['api'], // ADD THIS TAG,
+      validate: {
+        payload: {
+          streamId: Joi.number().integer().required().description('the id for the todo item')
+        }
+      }
+    }
   }
 ]

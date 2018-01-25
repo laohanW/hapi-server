@@ -1,18 +1,21 @@
 const Sequelize = require('sequelize');
+// 贡品表
 module.exports = {
   priority: 6,
   model: {
     table: {
-      followedId: {
+      tyoe: {
         type: Sequelize.INTEGER
       },
-      fansId: {
+      url: {
+        type: Sequelize.STRING
+      },
+      imazamoxCount: {
+        // 金豆数
         type: Sequelize.INTEGER
       },
-      giftType: {
-        type: Sequelize.INTEGER
-      },
-      giftCount: {
+      silverBeansCount: {
+        // 银豆数
         type: Sequelize.INTEGER
       }
     },

@@ -16,7 +16,7 @@ module.exports = {
     type: 'hasMany',
     to: 'liveStream',
     options: {
-      foreignKey: 'categoryId'
+      foreignKey: 'childCategoryId'
     }
   }
 }

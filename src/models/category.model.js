@@ -28,11 +28,14 @@ module.exports = {
       // freezeTableName: true
     }
   },
-  associate: {
-    type: 'hasMany',
-    to: 'childCategory',
-    options: {
-      foreignKey: 'childCategoryId'
+  associate: [
+    {
+      type: 'hasMany',
+      to: 'childCategory'
+    },
+    {
+      type: 'hasMany',
+      to: 'liveStream'
     }
-  }
+  ]
 }

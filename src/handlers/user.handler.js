@@ -9,5 +9,11 @@ module.exports = {
   },
   resetPassword: function (request, h) {
     return services.user.resetPassword(request.payload.userId, request.payload.oldPassword, request.payload.newPassword);
+  },
+  info: function (req, h) {
+    return services.user.info(req.payload.userId);
+  },
+  infoInLiveStream: function (req, h) {
+    return services.user.infoInLiveStream(req.payload.streamId);
   }
 }

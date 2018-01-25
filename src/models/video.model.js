@@ -5,7 +5,11 @@ module.exports = {
   model: {
     table: {
       videoId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primary: true
+      },
+      url: {
+        type: Sequelize.STRING
       },
       userId: {
         type: Sequelize.INTEGER
@@ -23,8 +27,29 @@ module.exports = {
       }
     },
     options: {
-      timestamp: false
+      timestamp: false,
+      createdAt: true
       // freezeTableName: true
     }
-  }
+  },
+  associate: [
+    {
+      type: 'hasMany',
+      to: 'videoLeavingMsg',
+      options: {
+        foreignKey: {
+          name: 'videoId'
+        }
+      }
+    },
+    {
+      type: 'hasMany',
+      to: 'videoPraise',
+      options: {
+        foreignKey: {
+          name: 'videoId'
+        }
+      }
+    }
+  ]
 }

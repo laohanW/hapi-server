@@ -17,7 +17,7 @@ function lintOne (aims) {
       console.log(`- Total Results: ${results.length}`)
       console.log(`- Total Warnings: ${results.warningCount}`)
       console.log(`- Total Errors: ${results.errorCount}`)
-      console.timeEnd('Finished eslint')
+      console.log('Finished eslint')
     }))
 }
 

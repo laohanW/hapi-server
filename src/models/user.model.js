@@ -3,22 +3,21 @@ module.exports = {
   priority: 2,
   model: {
     table: {
-      id: {
+      userId: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        unique: true
+        primaryKey: true
       },
       account: {
         type: Sequelize.STRING
-      },
-      userId: {
-        type: Sequelize.INTEGER
       },
       password: {
         type: Sequelize.STRING
       },
       name: {
+        type: Sequelize.STRING
+      },
+      headPortraitUrl: {
+        // 头像
         type: Sequelize.STRING
       },
       sex: {
@@ -31,6 +30,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       country: {
+        // 城市
         type: Sequelize.INTEGER
       },
       autgoraph: {
@@ -49,12 +49,45 @@ module.exports = {
         type: Sequelize.INTEGER// 金豆卷
       },
       yCurrency: {
-        tyoe: Sequelize.INTEGER// Y币
+        type: Sequelize.INTEGER// Y币
+      },
+      vipType: {
+        // vip类型，是否是贵宾
+        type: Sequelize.INTEGER
       }
     },
     options: {
       timestamp: false
       // freezeTableName: true
     }
-  }
+  },
+  associate: [
+    {
+      type: 'hasMany',
+      to: 'userPayment',
+      options: {
+        foreignKey: {
+          name: 'userId'
+        }
+      }
+    },
+    {
+      type: 'hanMany',
+      to: 'userPrize',
+      options: {
+        foreignKey: {
+          name: 'userId'
+        }
+      }
+    },
+    {
+      type: 'hanMany',
+      to: 'userVideo',
+      options: {
+        foreignKey: {
+          name: 'userId'
+        }
+      }
+    }
+  ]
 }

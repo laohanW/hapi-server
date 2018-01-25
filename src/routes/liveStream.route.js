@@ -7,7 +7,7 @@ module.exports = [
     method: 'POST',
     path: '/liveStream/start',
     config: {
-      handlers: handlers.liveStrean.start,
+      handler: handlers.liveStream.start,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -29,7 +29,7 @@ module.exports = [
       validate: {
         payload: {
           categoryId: Joi.number().integer().required().description('categoryId'),
-          childCategoryId: Joi.integer().required().description('childCategoryId'),
+          childCategoryId: Joi.number().integer().required().description('childCategoryId'),
           account: Joi.string().required().description('account')
         }
       }
@@ -39,7 +39,7 @@ module.exports = [
     method: 'POST',
     path: '/liveStream/cancel',
     config: {
-      handlers: handlers.liveStrean.cancel,
+      handler: handlers.liveStream.cancel,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -70,7 +70,7 @@ module.exports = [
     method: 'POST',
     path: '/liveStream/join',
     config: {
-      handlers: handlers.liveStrean.join,
+      handler: handlers.liveStream.join,
       plugins: {
         'hapi-swagger': {
           responses: {
@@ -101,7 +101,7 @@ module.exports = [
     method: 'POST',
     path: '/liveStream/list',
     config: {
-      handlers: handlers.liveStrean.list,
+      handler: handlers.liveStream.list,
       plugins: {
         'hapi-swagger': {
           responses: {

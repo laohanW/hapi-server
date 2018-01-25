@@ -1,18 +1,23 @@
 const Sequelize = require('sequelize');
+// vip贵族表
 module.exports = {
   priority: 6,
   model: {
     table: {
-      followedId: {
+      type: {
+        // 视频id
         type: Sequelize.INTEGER
       },
-      fansId: {
+      imageUrl: {
+        // 图像
         type: Sequelize.INTEGER
       },
-      giftType: {
+      miniIcon: {
+        // 图标头像
         type: Sequelize.INTEGER
       },
-      giftCount: {
+      monery: {
+        // 价值（）钱
         type: Sequelize.INTEGER
       }
     },

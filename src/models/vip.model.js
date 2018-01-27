@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 // vip贵族表
 module.exports = {
-  priority: 6,
   model: {
     table: {
       type: {

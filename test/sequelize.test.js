@@ -30,8 +30,13 @@ before(function(done){
   });
   models.tables.user = user;
   const fans = sequelize.define('fan',{
+    id:{
+      type:Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     userId:{
-      type:Sequelize.INTEGER
+      type:Sequelize.INTEGER,
     },
     fansId:{
       type:Sequelize.INTEGER
@@ -41,12 +46,33 @@ before(function(done){
     timestamp: false
   });
   models.tables.fans = fans;
+  const fansGift = sequelize.define('fansGift',{
+    id:{
+      type:Sequelize.INTEGER,
+      primaryKey: true
+    },
+    giftType: {
+      type: Sequelize.INTEGER
+    },
+    giftCount: {
+      type: Sequelize.INTEGER
+    }
+  },
+  {
+    timestamp: false
+  })
+  models.tables.fansGift = fansGift;
+  fans.hasMany(fansGift,{
+    foreignKey: 'id'
+  });
+  user.hasMany(fans,{
+    foreignKey:'userId'
+  });
   user.sync().then(function(){
     fans.sync().then(function(){
-      user.hasMany(fans,{
-        foreignKey:'userId'
+      fansGift.sync().then(function(){
+        done();
       });
-      done();
     });
   });
 });
@@ -54,7 +80,7 @@ describe('sequelize test', function () {
   it.skip ('user create',function () {
     models.sequelize.transaction(function(){
       models.tables.user.create({
-        account:'laohan'
+        account:'lan'
       }).then(function(result){
         expect(result).to.be.ok;
       })
@@ -64,19 +90,20 @@ describe('sequelize test', function () {
     models.sequelize.transaction(function(){
       models.tables.fans.create({
         userId:1,
-        fansId:2
+        fansId:5
       }).then(function(result){
         expect(result).to.be.ok;
       });
     });
   });
-  it ('user find',function(){
+  it.skip ('user findAll',function(){
     let userId=1;
     models.tables.user.findAll({
       where:{
         userId:userId
       },
       limit:1,
+      distinct: true,
       include:[
         {
           model:models.tables.fans
@@ -87,4 +114,19 @@ describe('sequelize test', function () {
       expect(result).to.be.ok;
     });
   });
+  it ('user findAll dustnct',function(){
+    let userId = 1;
+    models.tables.fans.findAll({
+      attributes:[
+        [models.sequelize.literal('distinct `userId`'),'userId'],
+        [models.sequelize.literal('`fansId`'),'fansId']
+      ],
+      where:{
+        userId:userId
+      }
+    }).then(function(result){
+      console.log(result);
+      expect(result).to.be.ok;
+    })
+  })
 });

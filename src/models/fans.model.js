@@ -1,18 +1,12 @@
 const Sequelize = require('sequelize');
+// 粉丝关系表
 module.exports = {
-  priority: 6,
   model: {
     table: {
       followedId: {
         type: Sequelize.INTEGER
       },
       fansId: {
-        type: Sequelize.INTEGER
-      },
-      giftType: {
-        type: Sequelize.INTEGER
-      },
-      giftCount: {
         type: Sequelize.INTEGER
       }
     },

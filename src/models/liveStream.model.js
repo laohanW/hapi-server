@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 module.exports = {
-  priority: 3,
   model: {
     table: {
       liveStreamId: {

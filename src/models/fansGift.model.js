@@ -1,21 +1,24 @@
 const Sequelize = require('sequelize');
-// 用户支付明细
+// 粉丝送礼品表
 module.exports = {
   model: {
     table: {
-      userId: {
-        type: Sequelize.STRING
-      },
-      money: {
+      fansId: {
         type: Sequelize.INTEGER
       },
-      type: {
-        // 1:支付   2:收入
+      followedId: {
+        type: Sequelize.INTEGER
+      },
+      giftType: {
+        type: Sequelize.INTEGER
+      },
+      giftCount: {
         type: Sequelize.INTEGER
       }
     },
     options: {
       timestamp: false
+      // freezeTableName: true
     }
   }
 }

@@ -18,9 +18,9 @@ const globtions = {
 const isArray = Array.isArray || function (arr) {
   return {}.toString.call(arr) === '[object Array]';
 };
-const isObject = function (obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]';
-}
+// const isObject = function (obj) {
+//   return Object.prototype.toString.call(obj) === '[object Object]';
+// }
 const cast = (value) => {
   return isArray(value) ? value : [value];
 };
@@ -45,19 +45,10 @@ async function initialize () {
   for (let m in tables) {
     let seq = sequelize.define(m, tables[m].model.table, tables[m].model.options);
     internals.tables[m] = seq;
-
-    await seq.sync();
   }
   for (let m in tables) {
     if (tables[m].associate) {
-      let tabArr = [];
-      if (isArray(tables[m].associate)) {
-        tabArr = tables[m].associate;
-      } else if (isObject(tables[m].associate)) {
-        tabArr = cast(tables[m].associate);
-      } else {
-        throw new Error('associate must object or array=>' + m);
-      }
+      let tabArr = cast(tables[m].associate);
       tabArr.forEach(function (ele) {
         if (ele.type === 'belongsToMany') {
           internals.tables[m].belongsToMany(internals.tables[ele.to], ele.options);
@@ -70,6 +61,9 @@ async function initialize () {
         }
       });
     }
+  }
+  for (let m in internals.tables) {
+    await internals.tables[m].sync();
   }
 }
 initialize();

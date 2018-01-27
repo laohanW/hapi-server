@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 // 视频点赞表
 module.exports = {
-  priority: 6,
   model: {
     table: {
       videoId: {

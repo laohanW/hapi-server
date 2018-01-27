@@ -1,7 +1,6 @@
 'use strict';
 const Sequelize = require('sequelize');
 module.exports = {
-  priority: 5,
   model: {
     table: {
       type: {

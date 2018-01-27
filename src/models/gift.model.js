@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 // 贡品表
 module.exports = {
-  priority: 6,
   model: {
     table: {
       tyoe: {

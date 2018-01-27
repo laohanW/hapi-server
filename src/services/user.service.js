@@ -1,11 +1,10 @@
 'use strict';
 const models = require('../models');
-const Op = require('sequelize').Op;
 const resCode = require('../core/resCode');
 const utils = require('../core/utils');
 module.exports = {
   add: async function (account, password, name) {
-    await models.sequelize.transaction();
+    await models.sequelize.transaction({autocommit: true});
     let userId = utils.caculateUserId();
     let err = await models.tables.user.findCreateFind({
       where: {
@@ -25,25 +24,16 @@ module.exports = {
     }
   },
   remove: async function (userId) {
-    let result = await models.tables.user.findOne({
+    await models.sequelize.transaction({autocommit: true});
+    let error = await models.tables.user.destroy({
       where: {
         userId: userId
       }
     });
-    if (result) {
-      await models.sequelize.transaction();
-      let error = await models.tables.user.destroy({
-        where: {
-          userId: userId
-        }
-      });
-      if (error) {
-        return resCode.dataDestroyFailure();
-      } else {
-        return resCode.success();
-      }
+    if (error) {
+      return resCode.dataDestroyFailure();
     } else {
-      return resCode.dataFindFailure();
+      return resCode.success();
     }
   },
   resetPassword: async function (userId, oldPasswprd, newPassword) {
@@ -55,7 +45,7 @@ module.exports = {
     if (result) {
       let pas = result.get('password');
       if (pas === oldPasswprd) {
-        await models.sequelize.transaction();
+        await models.sequelize.transaction({autocommit: true});
         let err = await models.tables.user.update({
           password: newPassword
         },
@@ -100,47 +90,15 @@ module.exports = {
       return resCode.dataFindFailure('dont has this userId=>' + userId);
     }
   },
-  infoInLiveStream: async function (streamId) {
-    let stream = await models.tables.liveStream.findOne({
+  weekLeaderboards: async function (userId) {
+    let result = await models.tables.fans.findAll({
+      attributes: [
+        [models.sequelize.literal('distinct ``'), '']
+      ],
       where: {
-        streamId: streamId
-      },
-      include: [
-        {
-          model: models.tables.user,
-          include: [
-            {
-              model: models.tables.video,
-              include: [
-                {
-                  model: models.tables.videoLeavingMsg
-                }
-              ],
-              order: ['createTime', 'DESC'],
-              limit: 1
-            }
-          ]
-        }
-      ]
+        userId: userId
+      }
+
     });
-    if (stream) {
-      console.log(stream);
-      let relateVideo = await models.tables.video.findAll({
-        where: {
-          title: {
-            [Op.like]: stream.title
-          }
-        },
-        limit: 10
-      })
-      return resCode.success({
-        title: stream.title,
-        headPortraitUrl: stream.users.headPortraitUrl,
-        createTime: stream.users.video.createTime,
-        relateVideo: relateVideo
-      });
-    } else {
-      return resCode.dataFindFailure('dont has this video=>' + stream.userId);
-    }
   }
 }

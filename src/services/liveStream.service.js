@@ -1,30 +1,30 @@
 'use strict';
-const models = require('../models');
+const sequelize = require('../models');
 const resCode = require('../core/resCode');
 const Op = require('sequelize').Op;
 module.exports = {
   start: async function (categoryId, childCategoryId, account) {
-    const category = await models.tables.category.findOne({
+    const category = await sequelize.models.category.findOne({
       where: {
         id: categoryId
       },
       include: [
         {
-          model: models.tables.childCategory,
+          model: sequelize.models.childCategory,
           where: {
             id: childCategoryId
           }
         }
       ]
     });
-    let user = await models.user.findOne({
+    let user = await sequelize.models.user.findOne({
       where: {
         account: account
       }
     });
     if (category && user) {
-      await models.sequelize.transaction();
-      let error = await models.tables.liveStream.create({
+      await sequelize.transaction();
+      let error = await sequelize.models.liveStream.create({
         account: account,
         categoryId: categoryId,
         childCategoryId: childCategoryId
@@ -39,8 +39,8 @@ module.exports = {
     }
   },
   cancel: async function (streamId, account) {
-    await models.sequelize.transaction();
-    let result = await models.tables.liveStream.destroy({
+    await sequelize.transaction();
+    let result = await sequelize.models.liveStream.destroy({
       where: {
         id: streamId,
         account: account
@@ -53,31 +53,31 @@ module.exports = {
     }
   },
   list: async function (childCategoryId) {
-    let liveStream = await models.tables.liveStream.findAll({
+    let liveStream = await sequelize.models.liveStream.findAll({
       where: {
         childCategoryId: childCategoryId
       }
     });
     if (liveStream) {
-      return resCode.success(JSON.stringify(liveStream));
+      return resCode.success(liveStream.toJSON());
     } else {
       return resCode.dataFindFailure();
     }
   },
   userInfo: async function (streamId) {
-    let stream = await models.tables.liveStream.findOne({
+    let stream = await sequelize.models.liveStream.findOne({
       where: {
         streamId: streamId
       },
       include: [
         {
-          model: models.tables.user,
+          model: sequelize.models.user,
           include: [
             {
-              model: models.tables.video,
+              model: sequelize.models.video,
               include: [
                 {
-                  model: models.tables.videoLeavingMsg
+                  model: sequelize.models.videoLeavingMsg
                 }
               ],
               order: ['createTime', 'DESC'],
@@ -89,7 +89,7 @@ module.exports = {
     });
     if (stream) {
       console.log(stream);
-      let relateVideo = await models.tables.video.findAll({
+      let relateVideo = await sequelize.models.video.findAll({
         where: {
           title: {
             [Op.like]: stream.title

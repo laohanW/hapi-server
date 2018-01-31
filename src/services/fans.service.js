@@ -1,9 +1,9 @@
 'use strict';
-const models = require('../models');
+const sequelize = require('../models');
 const resCode = require('../core/resCode');
 module.exports = {
   toFan: async function (userId, targetId) {
-    let has = await models.tables.fans.findOne({
+    let has = await sequelize.models.fans.findOne({
       where: {
         followedId: targetId,
         fansId: userId
@@ -12,8 +12,8 @@ module.exports = {
     if (has) {
       return resCode.dataFindFailure(userId + ' is fans to ' + targetId);
     } else {
-      await models.sequelize.transaction();
-      let error = await models.tables.fans.create({
+      await sequelize.transaction();
+      let error = await sequelize.models.fans.create({
         followedId: targetId,
         fansId: userId
       });
@@ -25,8 +25,8 @@ module.exports = {
     }
   },
   cancelFan: async function (userId, targetId) {
-    await models.sequelize.transaction();
-    let error = await models.tables.fans.destroy({
+    await sequelize.transaction();
+    let error = await sequelize.models.fans.destroy({
       followedId: targetId,
       fansId: userId
     });

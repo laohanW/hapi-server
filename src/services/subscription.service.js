@@ -1,9 +1,9 @@
 'use strict';
-const models = require('../models');
+const sequelize = require('../models');
 const resCode = require('../core/resCode');
 module.exports = {
   add: async function (userId, targetId) {
-    let has = await models.tables.subscription.findOne({
+    let has = await sequelize.models.subscription.findOne({
       where: {
         followedId: targetId,
         subscriberId: userId
@@ -12,8 +12,8 @@ module.exports = {
     if (has) {
       return resCode.dataFindFailure(userId + ' subscribered target ' + targetId);
     } else {
-      await models.sequelize.transaction();
-      let err = await models.tables.subscription.create({
+      await sequelize.transaction();
+      let err = await sequelize.models.subscription.create({
         followedId: targetId,
         subscriberId: userId
       });
@@ -25,8 +25,8 @@ module.exports = {
     }
   },
   remove: async function (userId, targetId) {
-    await models.sequelize.transaction();
-    let has = await models.tables.subscription.destroy({
+    await sequelize.transaction();
+    let has = await sequelize.models.subscription.destroy({
       where: {
         followedId: targetId,
         subscriberId: userId
@@ -39,13 +39,13 @@ module.exports = {
     }
   },
   list: async function (userId) {
-    let subscription = await models.tables.subscription.findAll({
+    let subscription = await sequelize.models.subscription.findAll({
       where: {
         followedId: userId
       }
     });
     if (subscription) {
-      return resCode.success(JSON.stringify(subscription));
+      return resCode.success(subscription.toJSON());
     } else {
       return resCode.dataFindFailure();
     }

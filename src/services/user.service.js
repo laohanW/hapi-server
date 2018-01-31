@@ -1,12 +1,12 @@
 'use strict';
-const models = require('../models');
+const sequelize = require('../models');
 const resCode = require('../core/resCode');
 const utils = require('../core/utils');
 module.exports = {
   add: async function (account, password, name) {
-    await models.sequelize.transaction({autocommit: true});
+    await sequelize.transaction({autocommit: true});
     let userId = utils.caculateUserId();
-    let err = await models.tables.user.findCreateFind({
+    let err = await sequelize.models.user.findCreateFind({
       where: {
         account: account
       },
@@ -24,8 +24,8 @@ module.exports = {
     }
   },
   remove: async function (userId) {
-    await models.sequelize.transaction({autocommit: true});
-    let error = await models.tables.user.destroy({
+    await sequelize.transaction({autocommit: true});
+    let error = await sequelize.models.user.destroy({
       where: {
         userId: userId
       }
@@ -37,7 +37,7 @@ module.exports = {
     }
   },
   resetPassword: async function (userId, oldPasswprd, newPassword) {
-    let result = await models.tables.user.findOne({
+    let result = await sequelize.models.user.findOne({
       where: {
         userId: userId
       }
@@ -45,8 +45,8 @@ module.exports = {
     if (result) {
       let pas = result.get('password');
       if (pas === oldPasswprd) {
-        await models.sequelize.transaction({autocommit: true});
-        let err = await models.tables.user.update({
+        await sequelize.transaction({autocommit: true});
+        let err = await sequelize.models.user.update({
           password: newPassword
         },
         {
@@ -67,13 +67,13 @@ module.exports = {
     }
   },
   info: async function (userId) {
-    let userInfo = await models.user.findOne({
+    let userInfo = await sequelize.models.user.findOne({
       where: {
         userId: userId
       }
     });
     if (userInfo) {
-      return resCode.success(JSON.stringify(userInfo));
+      return resCode.success(userInfo.toJSON());
     } else {
       return resCode.dataFindFailure('dont has this userId=>' + userId);
     }
@@ -91,9 +91,9 @@ module.exports = {
     }
   },
   weekLeaderboards: async function (userId) {
-    let result = await models.tables.fans.findAll({
+    await sequelize.models.fans.findAll({
       attributes: [
-        [models.sequelize.literal('distinct ``'), '']
+        [sequelize.literal('distinct ``'), '']
       ],
       where: {
         userId: userId

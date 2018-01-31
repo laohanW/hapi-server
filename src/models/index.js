@@ -7,8 +7,8 @@ const LocalStorage = require('continuation-local-storage');
 const namespace = LocalStorage.createNamespace('my-ver-own-namespace');
 
 const pattern = './*.model.js';
-let internals = {};
 let tables = {};
+let defineTables = {};
 const globtions = {
   nodir: true,
   strict: true,
@@ -39,32 +39,28 @@ const sequelize = new Sequelize(
   Config.get('db.password'),
   JSON.parse(JSON.stringify(Config.get('db'))
   ));
-internals.sequelize = sequelize;
-internals.tables = {};
 async function initialize () {
   for (let m in tables) {
     let seq = sequelize.define(m, tables[m].model.table, tables[m].model.options);
-    internals.tables[m] = seq;
+    defineTables[m] = seq;
   }
   for (let m in tables) {
     if (tables[m].associate) {
       let tabArr = cast(tables[m].associate);
       tabArr.forEach(function (ele) {
         if (ele.type === 'belongsToMany') {
-          internals.tables[m].belongsToMany(internals.tables[ele.to], ele.options);
+          defineTables[m].belongsToMany(defineTables[ele.to], ele.options);
         } else if (ele.type === 'belongsTo') {
-          internals.tables[m].belongsTo(internals.tables[ele.to], ele.options);
+          defineTables[m].belongsTo(defineTables[ele.to], ele.options);
         } else if (ele.type === 'hasMany') {
-          internals.tables[m].hasMany(internals.tables[ele.to], ele.options);
+          defineTables[m].hasMany(defineTables[ele.to], ele.options);
         } else if (ele.type === 'hasOne') {
-          internals.tables[m].hasOne(internals.tables[ele.to], ele.options);
+          defineTables[m].hasOne(defineTables[ele.to], ele.options);
         }
       });
     }
   }
-  for (let m in internals.tables) {
-    await internals.tables[m].sync();
-  }
+  await sequelize.sync()
 }
 initialize();
-module.exports = internals;
+module.exports = sequelize;

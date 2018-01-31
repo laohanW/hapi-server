@@ -1,9 +1,9 @@
 'use strict';
-const models = require('../models');
+const sequelize = require('../models');
 const resCode = require('../core/resCode');
 module.exports = {
   add: async function (type, categoryName, desc) {
-    const h = await models.tables.category.findOne({
+    const h = await sequelize.sequelize.models.category.findOne({
       where: {
         type: type,
         name: categoryName
@@ -12,8 +12,8 @@ module.exports = {
     if (h) {
       return resCode.dataFindFailure('type or categorName has');
     } else {
-      await models.sequelize.transaction();
-      await models.tables.category.create({
+      await sequelize.transaction();
+      await sequelize.models.category.create({
         type: type,
         name: categoryName,
         recommended: 0,
@@ -23,26 +23,26 @@ module.exports = {
     }
   },
   remove: async function (categoryId) {
-    await models.sequelize.transaction();
-    await models.tables.category.destroy({
+    await sequelize.transaction();
+    await sequelize.models.category.destroy({
       where: {
         id: categoryId
       },
-      include: [models.tables.childCategory]
+      include: [sequelize.models.childCategory]
     });
     return resCode.success();
   },
   recomList: async function (type) {
-    let h = await models.tables.category.findAll({
+    let h = await sequelize.models.category.findAll({
       where: {
         type: type,
         recommended: true
       }
     });
-    return resCode.success(JSON.stringify(h));
+    return resCode.success(h.toJSON());
   },
   setRecom: async function (categoryId, recommended) {
-    const error = await models.tables.category.update(
+    const error = await sequelize.models.category.update(
       {
         recommended: recommended
       },
@@ -59,14 +59,14 @@ module.exports = {
     }
   },
   allList: async function (type) {
-    let result = await models.tables.category.findAll({
+    let result = await sequelize.models.category.findAll({
       where: {
         type: type
       },
       distinct: true
     });
     if (result && result.length > 0) {
-      return resCode.success(JSON.stringify(result));
+      return resCode.success(result.toJSON());
     } else {
       return resCode.dataFindFailure();
     }
@@ -74,13 +74,13 @@ module.exports = {
   addChild: async function (categoryId, childCategoryName) {
     let category
     try {
-      category = await models.tables.category.findOne({
+      category = await sequelize.models.category.findOne({
         where: {
           id: categoryId
         },
         include: [
           {
-            model: models.tables.childCategory,
+            model: sequelize.models.childCategory,
             where: {
               name: childCategoryName
             }
@@ -93,8 +93,8 @@ module.exports = {
     if (category && category.length > 0) {
       return resCode.dataFindFailure(' has thiw categoryName' + childCategoryName);
     } else {
-      await models.sequelize.transaction();
-      let re = await models.tables.childCategory.create({
+      await sequelize.transaction();
+      let re = await sequelize.models.childCategory.create({
         categoryId: categoryId,
         name: childCategoryName
       });
@@ -106,8 +106,8 @@ module.exports = {
     }
   },
   removeChild: async function (childCategoryId) {
-    await models.sequelize.transaction();
-    const result = await models.childCategory.destroy({
+    await sequelize.transaction();
+    const result = await sequelize.models.childCategory.destroy({
       where: {
         id: childCategoryId
       }
@@ -119,13 +119,13 @@ module.exports = {
     }
   },
   childRecomList: async function (categoryId) {
-    const result = await models.tables.childCategory.findAll({
+    const result = await sequelize.models.childCategory.findAll({
       where: {
         id: categoryId
       }
     });
     if (result && result.length > 0) {
-      return resCode.success(JSON.stringify(result));
+      return resCode.success(result.toJSON());
     } else {
       return resCode.dataFindFailure();
     }
